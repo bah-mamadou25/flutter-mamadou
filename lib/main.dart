@@ -8,11 +8,12 @@ void main() {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
+  final String title = 'Sudoku';
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: title,
       theme: ThemeData(
         // This is the theme of your application.
         //
@@ -25,7 +26,8 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.blue,
       ),
-      home: const Game(title: 'Flutter Demo Home Page'),
+      // button replace game with button to start game
+      home: Game(title: title),
     );
   }
 }
