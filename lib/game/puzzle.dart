@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 
 import 'board.dart';
 
@@ -19,10 +18,6 @@ class Puzzle extends StatelessWidget {
       appBar: AppBar(
         title: Text(title),
         backgroundColor: Colors.blueAccent,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () => context.pop(),
-        ),
       ),
       body: Center(
         child: board,

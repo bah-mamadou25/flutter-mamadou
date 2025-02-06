@@ -17,6 +17,8 @@ class Board extends StatefulWidget {
 
 class _BoardState extends State<Board> {
   List<List<int>>? _matrix;
+  int? _selectedBoxIndex;
+  int? _selectedCellIndex;
 
   @override
   void initState() {
@@ -33,8 +35,15 @@ class _BoardState extends State<Board> {
       // If a cell's value is null, replace it with 0
       _matrix = puzzleApi.board()
           ?.matrix()?.map((row)
-                => row.map((cell)
-                        => cell.getValue() ?? 0).toList()).toList();
+      => row.map((cell)
+      => cell.getValue() ?? 0).toList()).toList();
+    });
+  }
+
+  void _onCellTap(int boxIndex, int cellIndex) {
+    setState(() {
+      _selectedBoxIndex = boxIndex;
+      _selectedCellIndex = cellIndex;
     });
   }
 
@@ -59,6 +68,9 @@ class _BoardState extends State<Board> {
             child: Box(
               boxSize: widget.boxSize,
               values: _matrix![x],
+              isSelected: _selectedBoxIndex == x,
+              selectedCellIndex: _selectedBoxIndex == x ? _selectedCellIndex : null,
+              onCellTap: (cellIndex) => _onCellTap(x, cellIndex),
             ),
           );
         }),
