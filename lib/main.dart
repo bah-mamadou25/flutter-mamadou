@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:sudoku_starter/game/game.dart';
+import 'package:sudoku_starter/game/puzzle.dart';
 
 import 'home.dart';
 
@@ -16,7 +16,7 @@ routes: [
   ),
   GoRoute(
     path: '/game',
-    builder: (context, state) => const Game(title: APP_TITLE),
+    builder: (context, state) => const Puzzle(title: APP_TITLE),
   )
 
 ]);

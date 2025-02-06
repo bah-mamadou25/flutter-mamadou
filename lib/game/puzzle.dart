@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-class Game extends StatelessWidget {
-  const Game({Key? key, required this.title}) : super(key: key);
+import 'board.dart';
+
+class Puzzle extends StatelessWidget {
+  const Puzzle({Key? key, required this.title}) : super(key: key);
 
   final String title;
 
@@ -12,7 +14,7 @@ class Game extends StatelessWidget {
     var width = MediaQuery.of(context).size.width;
     var maxSize = height > width ? width : height;
     var boxSize = (maxSize / 3).ceil().toDouble();
-
+    var board= Board(boxSize: boxSize);
     return Scaffold(
       appBar: AppBar(
         title: Text(title),
@@ -23,23 +25,9 @@ class Game extends StatelessWidget {
         ),
       ),
       body: Center(
-        child: SizedBox(
-          height: boxSize * 3,
-          width: boxSize * 3,
-          child: GridView.count(
-            crossAxisCount: 3,
-            children: List.generate(9, (x) {
-              return Container(
-                width: boxSize,
-                height: boxSize,
-                decoration: BoxDecoration(
-                  border: Border.all(color: Colors.blueAccent),
-                ),
-              );
-            }),
-          ),
-        ),
+        child: board,
       ),
     );
   }
 }
+
