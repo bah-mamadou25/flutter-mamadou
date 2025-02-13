@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:sudoku_starter/game/puzzle.dart';
+import 'package:sudoku_starter/game/game.dart';
 
 import 'home.dart';
 
@@ -16,7 +16,7 @@ final GoRouter _router = GoRouter(routes: [
     routes: [
       GoRoute(
         path: '/game',
-        builder: (context, state) => const Puzzle(title: APP_TITLE),
+        builder: (context, state) => const Game(title: APP_TITLE),
       ),
     ],
   ),
@@ -25,7 +25,6 @@ final GoRouter _router = GoRouter(routes: [
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp.router(

@@ -1,76 +1,43 @@
 import 'package:flutter/material.dart';
-import 'package:sudoku_api/sudoku_api.dart';
 
 import 'box.dart';
 
-class Board extends StatefulWidget {
+class Board extends StatelessWidget {
   const Board({
     super.key,
     required this.boxSize,
+    required this.values,
+    required this.onCellTap,
+    this.selectedBoxIndex,
+    this.selectedCellIndex,
   });
 
   final double boxSize;
-
-  @override
-  State<Board> createState() => _BoardState();
-}
-
-class _BoardState extends State<Board> {
-  List<List<int>>? _matrix;
-  int? _selectedBoxIndex;
-  int? _selectedCellIndex;
-
-  @override
-  void initState() {
-    super.initState();
-    _generatePuzzle();
-  }
-
-  Future<void> _generatePuzzle() async {
-    var puzzleOptions = PuzzleOptions(patternName: "winter");
-    var puzzleApi = Puzzle(puzzleOptions);
-    await puzzleApi.generate();
-    setState(() {
-      // Init board's matrix to a matrix of solvable integers
-      // If a cell's value is null, replace it with 0
-      _matrix = puzzleApi.board()
-          ?.matrix()?.map((row)
-      => row.map((cell)
-      => cell.getValue() ?? 0).toList()).toList();
-    });
-  }
-
-  void _onCellTap(int boxIndex, int cellIndex) {
-    setState(() {
-      _selectedBoxIndex = boxIndex;
-      _selectedCellIndex = cellIndex;
-    });
-  }
+  final List<List<int>> values;
+  final void Function(int, int) onCellTap;
+  final int? selectedBoxIndex;
+  final int? selectedCellIndex;
 
   @override
   Widget build(BuildContext context) {
-    if (_matrix == null) {
-      return const Center(child: CircularProgressIndicator());
-    }
-
     return SizedBox(
-      height: widget.boxSize * 3,
-      width: widget.boxSize * 3,
+      height: boxSize * 3,
+      width: boxSize * 3,
       child: GridView.count(
         crossAxisCount: 3,
         children: List.generate(9, (x) {
           return Container(
-            width: widget.boxSize,
-            height: widget.boxSize,
+            width: boxSize,
+            height: boxSize,
             decoration: BoxDecoration(
               border: Border.all(color: Colors.blueAccent),
             ),
             child: Box(
-              boxSize: widget.boxSize,
-              values: _matrix![x],
-              isSelected: _selectedBoxIndex == x,
-              selectedCellIndex: _selectedBoxIndex == x ? _selectedCellIndex : null,
-              onCellTap: (cellIndex) => _onCellTap(x, cellIndex),
+              boxSize: boxSize,
+              values: values[x],
+              isSelected: selectedBoxIndex == x,
+              selectedCellIndex: selectedBoxIndex == x ? selectedCellIndex : null,
+              onCellTap: (cellIndex) => onCellTap(x, cellIndex),
             ),
           );
         }),
