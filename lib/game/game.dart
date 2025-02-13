@@ -1,3 +1,4 @@
+import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:flutter/material.dart';
 import 'package:sudoku_api/sudoku_api.dart';
 
@@ -15,6 +16,7 @@ class Game extends StatefulWidget {
 
 class _GameState extends State<Game> {
   List<List<int>>? _matrix;
+  List<List<int>>? _expectedMatrix;
   int? _selectedBoxIndex;
   int? _selectedCellIndex;
 
@@ -34,6 +36,11 @@ class _GameState extends State<Game> {
           ?.matrix()
           ?.map((row) => row.map((cell) => cell.getValue() ?? 0).toList())
           .toList();
+      _expectedMatrix = puzzle
+          .solvedBoard()
+          ?.matrix()
+          ?.map((row) => row.map((cell) => cell.getValue() ?? 0).toList())
+          .toList();
     });
   }
 
@@ -46,9 +53,24 @@ class _GameState extends State<Game> {
 
   void _setValue(int value) {
     if (_selectedBoxIndex != null && _selectedCellIndex != null) {
-      setState(() {
-        _matrix![_selectedBoxIndex!][_selectedCellIndex!] = value;
-      });
+      int expectedValue = _expectedMatrix![_selectedBoxIndex!][_selectedCellIndex!];
+      if (value == expectedValue) {
+        setState(() {
+          _matrix![_selectedBoxIndex!][_selectedCellIndex!] = value;
+        });
+      } else {
+        final snackBar = SnackBar(
+          content: AwesomeSnackbarContent(
+            title: 'Erreur',
+            message: 'La valeur saisie n\'est pas correcte.',
+            contentType: ContentType.failure,
+          ),
+          backgroundColor: Colors.transparent,
+          behavior: SnackBarBehavior.floating,
+          elevation: 0,
+        );
+        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+      }
     }
   }
 
@@ -58,16 +80,18 @@ class _GameState extends State<Game> {
     var width = MediaQuery.of(context).size.width;
     var maxSize = height > width ? width : height;
     var boxSize = (maxSize / 3).ceil().toDouble();
-    if (_matrix == null) {
+    if (_matrix == null || _expectedMatrix == null) {
       return const Center(child: CircularProgressIndicator());
     }
 
     return Scaffold(
-        appBar: AppBar(
-          title: Text(widget.title),
-          backgroundColor: Colors.blueAccent,
-        ),
-        body: Center(
+      appBar: AppBar(
+        title: Text(widget.title),
+        backgroundColor: Colors.blueAccent,
+      ),
+      body: Center(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16.0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
@@ -77,6 +101,7 @@ class _GameState extends State<Game> {
                 child: Board(
                   boxSize: boxSize / 3,
                   values: _matrix!,
+                  expectedValues: _expectedMatrix!,
                   onCellTap: _onCellTap,
                   selectedBoxIndex: _selectedBoxIndex,
                   selectedCellIndex: _selectedCellIndex,
@@ -85,7 +110,8 @@ class _GameState extends State<Game> {
               KeyBoard(onKeyPressed: _setValue),
             ],
           ),
-        )
+        ),
+      ),
     );
   }
 }

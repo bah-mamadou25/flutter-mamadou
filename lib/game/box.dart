@@ -5,6 +5,7 @@ class Box extends StatelessWidget {
     super.key,
     required this.boxSize,
     required this.values,
+    required this.expectedValues,
     required this.isSelected,
     required this.selectedCellIndex,
     required this.onCellTap,
@@ -12,6 +13,7 @@ class Box extends StatelessWidget {
 
   final double boxSize;
   final List<int> values;
+  final List<int> expectedValues;
   final bool isSelected;
   final int? selectedCellIndex;
   final void Function(int) onCellTap;
@@ -25,6 +27,7 @@ class Box extends StatelessWidget {
         crossAxisCount: 3,
         children: List.generate(9, (index) {
           int value = values[index];
+          int expectedValue = expectedValues[index];
           bool cellIsSelected = isSelected && selectedCellIndex == index;
           return InkWell(
             onTap: () => onCellTap(index),
@@ -39,8 +42,11 @@ class Box extends StatelessWidget {
               ),
               child: Center(
                 child: Text(
-                  value == 0 ? '' : value.toString(),
-                  style: const TextStyle(fontSize: 20),
+                  value == 0 ? expectedValue.toString() : value.toString(),
+                  style: TextStyle(
+                    fontSize: 20,
+                    color: value == 0 ? Colors.black12 : Colors.black,
+                  ),
                 ),
               ),
             ),

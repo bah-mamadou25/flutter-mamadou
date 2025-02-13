@@ -7,6 +7,7 @@ class Board extends StatelessWidget {
     super.key,
     required this.boxSize,
     required this.values,
+    required this.expectedValues,
     required this.onCellTap,
     this.selectedBoxIndex,
     this.selectedCellIndex,
@@ -14,6 +15,7 @@ class Board extends StatelessWidget {
 
   final double boxSize;
   final List<List<int>> values;
+  final List<List<int>> expectedValues;
   final void Function(int, int) onCellTap;
   final int? selectedBoxIndex;
   final int? selectedCellIndex;
@@ -35,6 +37,7 @@ class Board extends StatelessWidget {
             child: Box(
               boxSize: boxSize,
               values: values[x],
+              expectedValues: expectedValues[x],
               isSelected: selectedBoxIndex == x,
               selectedCellIndex: selectedBoxIndex == x ? selectedCellIndex : null,
               onCellTap: (cellIndex) => onCellTap(x, cellIndex),
